@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  phone: MyString
+  password_digest: MyString
+  jwt_token: MyString
+  pic_token: MyString
+  msg_token: MyString
+
+two:
+  phone: MyString
+  password_digest: MyString
+  jwt_token: MyString
+  pic_token: MyString
+  msg_token: MyString
