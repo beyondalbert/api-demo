@@ -1,0 +1,2 @@
+class MsgToken < ApplicationRecord
+end
