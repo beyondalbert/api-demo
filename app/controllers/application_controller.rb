@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
 
   private
   def authenticate_request
+    p request.headers['Authorization']
     if request.headers['Authorization'].present?
       jwt_token = request.headers['Authorization'].split(' ').last
       jwt_info = JsonWebToken.decode(jwt_token)
