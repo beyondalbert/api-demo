@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   # {user: {phone: xxx, password: xxx}, msg_token: xxx}
   def register
     phone = user_params[:phone]
-    @msg_token = MsgToken.find_by_account(phone)
+    @msg_token = MsgToken.where(account: phone).last
     if @msg_token && @msg_token.value == params[:msg_token]
       @user = User.find_by_phone(phone)
       if @user
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
   # {user: {phone: xxx, password: xxx}, msg_token: xxx}
   def reset_password
     phone = user_params[:phone]
-    @msg_token = MsgToken.find_by_account(phone)
+    @msg_token = MsgToken.where(account: phone).last
     if @msg_token && @msg_token.value == params[:msg_token]
       @user = User.find_by_phone(phone)
       unless @user

@@ -2,12 +2,17 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate_request, only: [:create, :captcha, :send_msg_token]
 
   def create
-    results = User.auth_jwt_token(params[:phone], params[:password])
+    @captcha = Captcha.find(params[:captcha][:id])
+    if @captcha && @captcha.value.downcase == params[:captcha][:value].downcase
+      results = User.auth_jwt_token(params[:user][:phone], params[:user][:password])
+    else
+      statusMsg = "图片验证码错误！"
+    end
 
     if results
       render json: { results: {user: results[0].as_json(only: [:id, :phone, :jwt_token]).merge!({exp: results[1]})}, statusCode: 200, statusMsg: '登录成功', success: "true" }
     else
-      render json: { results: {}, statusCode: 403, statusMsg: "账户或密码错误！", success: "false" }, status: :unauthorized
+      render json: { results: {}, statusCode: 403, statusMsg: statusMsg || "账户或密码错误！", success: "false" }
     end
   end
 
@@ -30,12 +35,7 @@ class SessionsController < ApplicationController
     statusMsg = nil
     @captcha = Captcha.find(params[:captcha][:id])
     if @captcha && @captcha.value.downcase == params[:captcha][:value].downcase
-      @msg_token = MsgToken.find_by_account(params[:user][:phone])
-      if @msg_token
-        @msg_token.update!(value: rand.to_s[2..7])
-      else
-        @msg_token = MsgToken.create!(account: params[:user][:phone], value: rand.to_s[2..7])
-      end
+      @msg_token = MsgToken.create!(account: params[:user][:phone], value: rand.to_s[2..7])
 
       # 5分钟后自动删除短信验证码信息
       MsgTokensCleanupJob.set(wait: 5.minute).perform_later(@msg_token)

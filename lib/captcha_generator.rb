@@ -1,7 +1,7 @@
 module CaptchaGenerator
   extend self
 
-  def g text, width = 100, height = 28
+  def g text, width = 60, height = 16
     text = text.upcase
 
     params = ['-fill darkblue', '-background white']
