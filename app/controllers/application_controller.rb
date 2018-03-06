@@ -12,6 +12,6 @@ class ApplicationController < ActionController::API
         @current_user ||= User.find(jwt_info[:user_id])
       end
     end
-    render json: {results: {}, statusCode: 403, statusMsg: "没有权限", success: "false" }, status: 401 unless @current_user
+    render json: {results: {}, statusCode: 403, statusMsg: "没有权限", success: "false" } unless @current_user
   end
 end
