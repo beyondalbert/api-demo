@@ -14,7 +14,7 @@ class UsersController < ApplicationController
   def register
     phone = user_params[:phone]
     @msg_token = MsgToken.where(account: phone).last
-    if @msg_token && @msg_token.value == params[:msg_token]
+    if @msg_token && @msg_token.value == params[:msg_token][:value]
       @user = User.find_by_phone(phone)
       if @user
         return render json: {results: {}, statusCode: 500, statusMsg: "当前手机号已注册，请直接登陆！", success: "false"}
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
   def reset_password
     phone = user_params[:phone]
     @msg_token = MsgToken.where(account: phone).last
-    if @msg_token && @msg_token.value == params[:msg_token]
+    if @msg_token && @msg_token.value == params[:msg_token][:value]
       @user = User.find_by_phone(phone)
       unless @user
         return render json: {results: {}, statusCode: 500, statusMsg: "当前手机号未注册，请注册！", success: "false"}
